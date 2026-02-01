@@ -597,3 +597,27 @@ end)
         Wand.Parent = Frame.Visible and LP.Backpack or nil
     end)
 end)
+
+-- [[ 🔓 FIXED JUMP SYSTEM BY GEMINI | สำหรับแก้บัคมือถือรันแล้วโดดไม่ได้ ]]
+task.spawn(function()
+    while task.wait(1) do -- เช็คทุกๆ 1 วินาที
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            if char then
+                local hum = char:FindFirstChildOfClass("Humanoid")
+                if hum then
+                    -- ปลดล็อคค่ากระโดดพื้นฐาน
+                    hum.JumpPower = 50 
+                    hum.JumpHeight = 7.2
+                    hum.UseJumpPower = true
+                    
+                    -- ถ้าไม่ได้เปิดฟาร์ม/AI ให้ปลดล็อคสถานะตัวแข็ง (กันบัคปุ่มหาย)
+                    if not _G.MazdaAI and not _G.Settings.AutoFarm then
+                        hum.PlatformStand = false
+                        hum.Sit = false
+                    end
+                end
+            end
+        end)
+    end
+end)
