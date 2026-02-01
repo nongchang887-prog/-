@@ -597,3 +597,36 @@ end)
         Wand.Parent = Frame.Visible and LP.Backpack or nil
     end)
 end)
+
+-- [[ 🔓 FIXED JUMP V2 | แก้บัคโดดแล้วดิ่งลง/ตัวหนัก ]]
+task.spawn(function()
+    while task.wait(0.5) do -- ปรับเวลาให้เช็คเร็วขึ้นนิดหน่อย
+        pcall(function()
+            local char = game.Players.LocalPlayer.Character
+            local hum = char and char:FindFirstChildOfClass("Humanoid")
+            local root = char and char:FindFirstChild("HumanoidRootPart")
+
+            if hum and root then
+                -- ถ้าเรากดกระโดด (Jump == true) ให้หยุดรบกวน Velocity ชั่วคราว
+                if hum.Jump then
+                    -- ปล่อยให้แรงกระโดดทำงานปกติ
+                    return 
+                end
+
+                -- ตั้งค่าพื้นฐาน
+                hum.JumpPower = 50
+                hum.UseJumpPower = true
+                
+                -- [[ จุดสำคัญ ]] 
+                -- ถ้าไม่ได้เปิดระบบฟาร์ม หรือ MazdaAI ให้มั่นใจว่าตัวละครไม่ได้ถูกล็อคค่า PlatformStand
+                if not _G.MazdaAI and not _G.Settings.AutoFarm then
+                    hum.PlatformStand = false
+                    -- ถ้าเพื่อนตัวดิ่งแรงไป ให้รีเซ็ตแรงตกค้าง (Velocity)
+                    if root.Velocity.Y < -50 then -- ถ้ากำลังดิ่งเร็วเกินไป
+                        root.Velocity = Vector3.new(root.Velocity.X, 0, root.Velocity.Z)
+                    end
+                end
+            end
+        end)
+    end
+end)
